@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Запись — BeautyWeb Demo</title>
+<link rel="icon" href="LOGO.jpeg" type="image/jpeg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const sb = window.supabase.createClient(
+  'https://telvmpbhszlmvkrbaacd.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRlbHZtcGJoc3psbXZrcmJhYWNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5MjIwMjAsImV4cCI6MjA5NTQ5ODAyMH0.x1lpqtof0vt23W0qdTJE1PFxjJEcSiD8nMN_vMseq9U'
+);
+</script>
+<style>
+:root{
+  --bg:#FDF8F5;--surface:#FFFFFF;--card:#F9F2F7;--card2:#F5E8EF;
+  --rose:#C8779A;--rose-dk:#A0527A;--rose-lt:rgba(200,119,154,.12);
+  --lilac:#B89AC4;--lilac-dk:#9070AA;--lilac-lt:rgba(184,154,196,.12);
+  --teal:#6A9E8A;--teal-dk:#4A7A68;--teal-lt:rgba(106,158,138,.12);
+  --gold:#C9A87A;--gold-lt:rgba(201,168,122,.12);
+  --text:#2D1828;--text-2:#503848;--muted:#8A6A7A;
+  --border:rgba(200,119,154,.18);
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --script:'Dancing Script',cursive;
+  --sans:'Inter',system-ui,sans-serif;
+  --sh:0 6px 32px rgba(160,82,122,.12);
+  --r:14px;--r-lg:20px;--r-xl:28px;
+  --trans:all .22s cubic-bezier(.4,0,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+@media(prefers-reduced-motion:reduce){*{transition-duration:.01ms!important}}
+
+/* BACKGROUND subtle */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 55% 50% at 80% 5%,rgba(200,119,154,.07) 0%,transparent 65%),
+    radial-gradient(ellipse 45% 40% at 5% 85%,rgba(184,154,196,.06) 0%,transparent 65%);
+}
+
+/* TOPBAR */
+.topbar{
+  position:sticky;top:0;z-index:100;
+  background:rgba(253,248,245,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(200,119,154,.12);
+  padding:.9rem 1.5rem;display:flex;align-items:center;justify-content:space-between;
+}
+.topbar-logo{display:flex;align-items:center;gap:.7rem}
+.logo-name{font-family:var(--serif);font-size:1.2rem;font-weight:700;background:linear-gradient(135deg,var(--rose-dk),var(--lilac),var(--teal-dk));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.logo-sub{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+.back-btn{
+  display:flex;align-items:center;gap:.45rem;font-size:.875rem;font-weight:500;
+  color:var(--text-2);transition:var(--trans);padding:.45rem .9rem;
+  border-radius:50px;border:1px solid var(--border);cursor:pointer;
+}
+.back-btn:hover{color:var(--rose-dk);border-color:var(--rose);background:rgba(200,119,154,.06)}
+
+/* MAIN LAYOUT */
+.page{position:relative;z-index:1;max-width:740px;margin:0 auto;padding:2.5rem 1.5rem 4rem}
+.page-title{text-align:center;margin-bottom:2.5rem}
+.page-title .script{font-family:var(--script);font-size:1.3rem;color:var(--rose);display:block;margin-bottom:.3rem}
+.page-title h1{font-family:var(--serif);font-size:clamp(1.8rem,4vw,2.6rem);color:var(--text);font-weight:600}
+.page-title p{font-size:.9rem;color:var(--muted);margin-top:.5rem}
+
+/* PROGRESS */
+.progress{display:flex;align-items:center;justify-content:center;margin-bottom:2.5rem}
+.ps{display:flex;flex-direction:column;align-items:center;gap:.35rem;flex:1;position:relative}
+.ps:not(:last-child)::after{content:'';position:absolute;top:15px;left:50%;right:-50%;height:1.5px;background:rgba(200,119,154,.18);z-index:0}
+.ps.done::after{background:linear-gradient(90deg,var(--rose),var(--lilac))}
+.pd{width:30px;height:30px;border-radius:50%;background:#fff;border:1.5px solid rgba(200,119,154,.28);color:var(--muted);font-size:.8rem;font-weight:600;display:flex;align-items:center;justify-content:center;z-index:1;transition:var(--trans);box-shadow:0 2px 8px rgba(200,119,154,.08)}
+.ps.active .pd{background:linear-gradient(135deg,var(--rose),var(--rose-dk));border-color:var(--rose);color:#fff;box-shadow:0 0 0 4px rgba(200,119,154,.15)}
+.ps.done .pd{background:linear-gradient(135deg,var(--lilac),var(--lilac-dk));border-color:var(--lilac-dk);color:#fff}
+.pl{font-size:.65rem;color:var(--muted);text-align:center;font-weight:500}
+.ps.active .pl{color:var(--rose)}
+
+/* WIZARD CARD */
+.wcard{background:rgba(255,255,255,.9);backdrop-filter:blur(16px);border:1px solid rgba(200,119,154,.14);border-radius:var(--r-xl);padding:2.25rem;box-shadow:var(--sh)}
+.wstep{display:none}.wstep.active{display:block}
+.wstep-title{font-family:var(--serif);font-size:1.7rem;color:var(--text);margin-bottom:.3rem;font-weight:600}
+.wstep-hint{font-size:.875rem;color:var(--muted);margin-bottom:1.75rem}
+
+/* SERVICE OPTIONS */
+.svc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:.65rem}
+.svc-opt{
+  padding:.9rem 1rem;border-radius:var(--r);cursor:pointer;transition:var(--trans);
+  background:#fff;border:1.5px solid rgba(200,119,154,.14);
+}
+.svc-opt:hover{border-color:var(--rose);background:var(--card2);transform:translateY(-1px);box-shadow:0 4px 12px rgba(200,119,154,.12)}
+.svc-opt.sel{border-color:var(--rose);background:var(--card2);box-shadow:0 0 0 3px rgba(200,119,154,.18);transform:translateY(-1px)}
+.svc-opt{position:relative}
+.svc-opt.sel::after{content:'';position:absolute;top:.45rem;right:.45rem;width:18px;height:18px;background:var(--rose);border-radius:50%;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 6L5 9L10 3' stroke='white' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E");background-size:70%;background-repeat:no-repeat;background-position:center}
+.svc-sel-info{font-size:.82rem;color:var(--rose-dk);font-weight:600;margin-bottom:1.25rem;padding:.45rem .9rem;background:var(--card2);border-radius:var(--r);display:inline-block;border:1px solid rgba(200,119,154,.2)}
+.so-name{font-size:.875rem;font-weight:600;color:var(--text);margin-bottom:.2rem}
+.so-price{font-size:.8rem;color:var(--teal-dk);font-weight:500}
+
+/* MASTER OPTIONS */
+.mo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:.75rem}
+.mo-item{
+  padding:1.1rem .85rem;border-radius:var(--r);cursor:pointer;transition:var(--trans);
+  text-align:center;background:#fff;border:1.5px solid rgba(200,119,154,.14);
+}
+.mo-item:hover{border-color:var(--rose);background:var(--card2);transform:translateY(-2px);box-shadow:0 6px 18px rgba(200,119,154,.14)}
+.mo-item.sel{border-color:var(--rose);background:var(--card2);box-shadow:0 0 0 3px rgba(200,119,154,.2);transform:translateY(-2px)}
+.mo-av{width:52px;height:52px;border-radius:50%;margin:0 auto .6rem;box-shadow:0 4px 12px rgba(0,0,0,.12)}
+.av-img{background-image:url('aigerimDiana.png');background-size:400% auto;background-repeat:no-repeat;border-radius:50%}
+.av-mani{background-position:0% 0%}
+.av-hair{background-position:33.33% 0%}
+.av-make{background-position:66.66% 0%}
+.av-lash{background-position:100% 0%}
+.mo-name{font-size:.875rem;font-weight:600;color:var(--text)}
+.mo-spec{font-size:.72rem;color:var(--muted);margin-top:.2rem}
+
+/* CALENDAR */
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.cal-title{font-family:var(--serif);font-size:1.05rem;color:var(--text);font-weight:600}
+.cal-nb{width:32px;height:32px;border-radius:50%;background:#fff;border:1.5px solid rgba(200,119,154,.2);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-2);transition:var(--trans)}
+.cal-nb:hover{border-color:var(--rose);color:var(--rose);background:var(--card2)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:.3rem}
+.cal-hdr{font-size:.65rem;font-weight:600;color:var(--muted);text-align:center;padding:.3rem 0;text-transform:uppercase}
+.cal-day{aspect-ratio:1;border-radius:8px;font-size:.8rem;font-weight:500;background:#fff;border:1.5px solid transparent;cursor:pointer;transition:var(--trans);color:var(--text-2);display:flex;align-items:center;justify-content:center}
+.cal-day:hover:not(:disabled){border-color:var(--lilac);color:var(--text);background:var(--lilac-lt)}
+.cal-day.sel{background:linear-gradient(135deg,var(--rose),var(--lilac));color:#fff;box-shadow:0 4px 14px rgba(160,82,122,.3);border-color:transparent}
+.cal-day:disabled{opacity:.28;cursor:not-allowed}
+.cal-day.blocked{opacity:.2;cursor:not-allowed;background:rgba(200,80,80,.08)}
+
+/* TIME SLOTS */
+.time-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:.5rem;margin-top:.75rem}
+.time-btn{padding:.65rem;border-radius:9px;font-size:.85rem;font-weight:500;background:#fff;border:1.5px solid rgba(200,119,154,.14);cursor:pointer;transition:var(--trans);color:var(--text-2)}
+.time-btn:hover:not(:disabled){border-color:var(--teal);color:var(--teal-dk);background:var(--teal-lt)}
+.time-btn.sel{background:linear-gradient(135deg,var(--teal),var(--teal-dk));color:#fff;border-color:transparent;box-shadow:0 4px 14px rgba(74,122,104,.25)}
+.time-btn:disabled{opacity:.28;cursor:not-allowed;text-decoration:line-through}
+
+/* FORM */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.fg{margin-bottom:1.2rem}
+.fg label{display:block;font-size:.875rem;font-weight:500;color:var(--text-2);margin-bottom:.4rem}
+.fg input{width:100%;padding:.85rem 1rem;border-radius:10px;outline:none;border:1.5px solid rgba(200,119,154,.2);font-family:var(--sans);font-size:.9375rem;color:var(--text);background:#fff;transition:var(--trans)}
+.fg input:focus{border-color:var(--rose);box-shadow:0 0 0 3px rgba(200,119,154,.1)}
+.fg input.err{border-color:#d05555}
+.form-err{font-size:.8rem;color:#c04444;margin-top:.3rem;display:none}
+
+/* SUMMARY */
+.b-sum{background:linear-gradient(135deg,rgba(200,119,154,.07),rgba(184,154,196,.05));border:1px solid rgba(200,119,154,.16);border-radius:var(--r);padding:1.15rem;margin-bottom:1.5rem}
+.bsr{display:flex;justify-content:space-between;padding:.4rem 0;font-size:.875rem;border-bottom:1px solid rgba(200,119,154,.1)}
+.bsr:last-child{border-bottom:none}
+.bsl{color:var(--muted)}.bsv{font-weight:500;color:var(--text)}
+
+/* NAV */
+.wnav{display:flex;justify-content:space-between;align-items:center;margin-top:2rem;gap:1rem}
+.wnav button{min-width:120px}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.78rem 1.75rem;border-radius:50px;font-size:.9375rem;font-weight:500;border:none;cursor:pointer;transition:var(--trans)}
+.btn-primary{background:linear-gradient(135deg,var(--rose),var(--rose-dk));color:#fff;box-shadow:0 4px 18px rgba(160,82,122,.4)}
+.btn-primary:hover{box-shadow:0 8px 28px rgba(160,82,122,.55);transform:translateY(-2px)}
+.btn-primary:disabled{opacity:.5;transform:none;cursor:not-allowed}
+.btn-outline{background:transparent;color:var(--text-2);border:1.5px solid rgba(200,119,154,.25)}
+.btn-outline:hover{border-color:var(--rose);color:var(--rose);background:rgba(200,119,154,.06)}
+.btn-teal{background:linear-gradient(135deg,var(--teal),var(--teal-dk));color:#fff;box-shadow:0 4px 18px rgba(74,122,104,.35)}
+.btn-teal:hover{box-shadow:0 8px 28px rgba(74,122,104,.5);transform:translateY(-2px)}
+
+/* SUCCESS */
+.b-success{text-align:center;padding:2.5rem 1rem;display:none}
+.b-success.show{display:block}
+.s-lotus{margin:0 auto 1rem;display:block}
+.s-title{font-family:var(--serif);font-size:2rem;font-style:italic;color:var(--rose);margin-bottom:.5rem}
+.s-sub{font-size:.9375rem;color:var(--muted);margin-bottom:2rem;line-height:1.65}
+
+/* SPINNER */
+.spin{display:inline-block;width:20px;height:20px;border:2px solid rgba(200,119,154,.18);border-top-color:var(--rose);border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.empty-st{text-align:center;padding:2rem;color:var(--muted)}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  .wcard{padding:1.5rem}
+  .form-row{grid-template-columns:1fr}
+  .pl{display:none}
+  .page{padding:1.5rem 1rem 3rem}
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-logo">
+    <img src="LOGO.jpeg" width="40" height="40" style="object-fit:contain;flex-shrink:0" alt="BeautyWeb KZ" loading="lazy"/>
+    <div>
+      <div class="logo-name">BeautyWeb Demo</div>
+      <div class="logo-sub">Онлайн-запись</div>
+    </div>
+  </div>
+  <button class="back-btn" onclick="window.location.href='BeautyWebKZ.html'" aria-label="Назад на сайт">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+    Назад на сайт
+  </button>
+</div>
+
+<!-- PAGE -->
+<main class="page">
+  <div class="page-title">
+    <span class="script">Запись онлайн</span>
+    <h1>Выберите услугу<br/>и удобное время</h1>
+    <p>Займёт не более 2 минут</p>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress" id="bkProg" aria-label="Шаги записи">
+    <div class="ps active"><div class="pd">1</div><div class="pl">Услуга</div></div>
+    <div class="ps"><div class="pd">2</div><div class="pl">Мастер</div></div>
+    <div class="ps"><div class="pd">3</div><div class="pl">Дата</div></div>
+    <div class="ps"><div class="pd">4</div><div class="pl">Время</div></div>
+    <div class="ps"><div class="pd">5</div><div class="pl">Контакты</div></div>
+  </div>
+
+  <!-- WIZARD CARD -->
+  <div class="wcard">
+    <!-- SUCCESS -->
+    <div class="b-success" id="bkOk">
+      <svg class="s-lotus" width="72" height="72" viewBox="0 0 44 44" fill="none" aria-hidden="true">
+        <defs>
+          <radialGradient id="slg3" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#FDF8F5"/><stop offset="100%" stop-color="#F0DCE8"/></radialGradient>
+          <linearGradient id="slg1" x1="0" y1="0" x2="44" y2="44" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#C8779A"/><stop offset="45%" stop-color="#B89AC4"/><stop offset="100%" stop-color="#6A9E8A"/></linearGradient>
+          <linearGradient id="slg2" x1="4" y1="0" x2="40" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#C9A87A"/><stop offset="100%" stop-color="#E8C87A"/></linearGradient>
+        </defs>
+        <circle cx="22" cy="22" r="21" fill="url(#slg3)" stroke="#EDD8E8" stroke-width="1.5"/>
+        <path d="M10 34 A14 14 0 0 1 34 34" stroke="url(#slg2)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M22 9 C20 13 18 17 18 22 C18 25.5 19.5 27.5 22 27.5 C24.5 27.5 26 25.5 26 22 C26 17 24 13 22 9Z" fill="url(#slg1)" opacity=".9"/>
+        <path d="M11 16 C13 20 16 22 19.5 22.5 C21 22.8 22 21.5 22 19.5 C22 17 20 14 17.5 12 C14.5 10 11 11 11 16Z" fill="url(#slg1)" opacity=".75"/>
+        <path d="M33 16 C31 20 28 22 24.5 22.5 C23 22.8 22 21.5 22 19.5 C22 17 24 14 26.5 12 C29.5 10 33 11 33 16Z" fill="url(#slg1)" opacity=".75"/>
+        <path d="M13 30 C15 27 19 26 22 27 L19 33 C16.5 33.5 13 32 13 30Z" fill="#6A9E8A" opacity=".65"/>
+        <path d="M31 30 C29 27 25 26 22 27 L25 33 C27.5 33.5 31 32 31 30Z" fill="#6A9E8A" opacity=".65"/>
+        <circle cx="22" cy="21" r="2.5" fill="url(#slg2)" opacity=".9"/>
+      </svg>
+      <div class="s-title">Вы записаны!</div>
+      <p class="s-sub" id="okMsg">Ждём вас!</p>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-teal" onclick="resetBk()">Записаться ещё раз</button>
+        <button class="btn btn-outline" onclick="window.close()">Закрыть</button>
+      </div>
+    </div>
+
+    <!-- STEP 1 — Service -->
+    <div class="wstep active" id="s1">
+      <div class="wstep-title">Выберите услугу</div>
+      <div class="wstep-hint">Выберите одну или несколько процедур</div>
+      <div class="svc-sel-info" id="svcSelInfo" style="display:none">Выбрано: <strong id="svcSelCount">0</strong> · Итого: <strong id="svcSelTotal">0 ₸</strong></div>
+      <div class="svc-grid">
+        <div class="svc-opt" onclick="pickSvc('Маникюр классический',4500,'mani',this)"><div class="so-name">Маникюр классический</div><div class="so-price">4 500 ₸</div></div>
+        <div class="svc-opt" onclick="pickSvc('Маникюр гель-лак',7500,'mani',this)"><div class="so-name">Маникюр гель-лак</div><div class="so-price">7 500 ₸</div></div>
+        <div class="svc-opt" onclick="pickSvc('Педикюр классический',7000,'mani',this)"><div class="so-name">Педикюр классический</div><div class="so-price">7 000 ₸</div></div>
+        <div class="svc-opt" onclick="pickSvc('Педикюр гель-лак',9000,'mani',this)"><div class="so-name">Педикюр гель-лак</div><div class="so-price">9 000 ₸</div></div>
+        <div class="svc-opt" onclick="pickSvc('Наращивание ногтей',12000,'mani',this)"><div class="so-name">Наращивание ногтей</div><div class="so-price">12 000 ₸</div></div>
+        <div class="svc-opt" onclick="pickSvc('Наращивание ресниц',11000,'lash',this)"><div class="so-name">Наращивание ресниц</div><div class="so-price">11 000 ₸</div></div>
+        <div class="svc-opt" onclick="pickSvc('Ламинирование ресниц',8000,'lash',this)"><div class="so-name">Ламинирование ресниц</div><div class="so-price">8 000 ₸</div></div>
+        <div class="svc-opt" onclick="pickSvc('Ламинирование бровей',6000,'lash',this)"><div class="so-name">Ламинирование бровей</div><div class="so-price">6 000 ₸</div></div>
+        <div class="svc-opt" onclick="pickSvc('Архитектура бровей',2500,'lash',this)"><div class="so-name">Архитектура бровей</div><div class="so-price">2 500 ₸</div></div>
+        <div class="svc-opt" onclick="pickSvc('Стрижка женская',5000,'hair',this)"><div class="so-name">Стрижка женская</div><div class="so-price">от 5 000 ₸</div></div>
+        <div class="svc-opt" onclick="pickSvc('Окрашивание волос',15000,'hair',this)"><div class="so-name">Окрашивание волос</div><div class="so-price">от 15 000 ₸</div></div>
+        <div class="svc-opt" onclick="pickSvc('Дневной макияж',12000,'make',this)"><div class="so-name">Дневной макияж</div><div class="so-price">12 000 ₸</div></div>
+        <div class="svc-opt" onclick="pickSvc('Вечерний макияж',15000,'make',this)"><div class="so-name">Вечерний макияж</div><div class="so-price">15 000 ₸</div></div>
+        <div class="svc-opt" onclick="pickSvc('Шугаринг (ноги)',6000,'make',this)"><div class="so-name">Шугаринг (ноги)</div><div class="so-price">6 000 ₸</div></div>
+      </div>
+      <div class="wnav" style="justify-content:flex-end">
+        <button class="btn btn-primary" id="s1n" onclick="goStep(2)" disabled>
+          Далее <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 2 — Master -->
+    <div class="wstep" id="s2">
+      <div class="wstep-title">Выберите мастера</div>
+      <div class="wstep-hint">Загружаем доступных специалистов…</div>
+      <div class="mo-grid" id="moGrid"><div class="empty-st"><div class="spin"></div></div></div>
+      <div class="wnav">
+        <button class="btn btn-outline" onclick="goStep(1)">← Назад</button>
+        <button class="btn btn-primary" id="s2n" onclick="goStep(3)" disabled>Далее →</button>
+      </div>
+    </div>
+
+    <!-- STEP 3 — Date -->
+    <div class="wstep" id="s3">
+      <div class="wstep-title">Выберите дату</div>
+      <div class="wstep-hint">Прошедшие и заблокированные даты недоступны</div>
+      <div class="cal-nav">
+        <button class="cal-nb" onclick="changeMonth(-1)" aria-label="Предыдущий месяц">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div class="cal-title" id="calTitle"></div>
+        <button class="cal-nb" onclick="changeMonth(1)" aria-label="Следующий месяц">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+      <div class="wnav">
+        <button class="btn btn-outline" onclick="goStep(2)">← Назад</button>
+        <button class="btn btn-primary" id="s3n" onclick="goStep(4)" disabled>Далее →</button>
+      </div>
+    </div>
+
+    <!-- STEP 4 — Time -->
+    <div class="wstep" id="s4">
+      <div class="wstep-title">Выберите время</div>
+      <div class="wstep-hint" id="timeHint">Доступные слоты на выбранную дату</div>
+      <div class="time-grid" id="timeGrid"><div class="empty-st"><div class="spin"></div></div></div>
+      <div class="wnav">
+        <button class="btn btn-outline" onclick="goStep(3)">← Назад</button>
+        <button class="btn btn-primary" id="s4n" onclick="goStep(5)" disabled>Далее →</button>
+      </div>
+    </div>
+
+    <!-- STEP 5 — Contacts -->
+    <div class="wstep" id="s5">
+      <div class="wstep-title">Ваши контакты</div>
+      <div class="wstep-hint">Мы свяжемся для подтверждения записи</div>
+      <div class="b-sum" id="bkSum"></div>
+      <div class="form-row">
+        <div class="fg">
+          <label for="cName">Имя *</label>
+          <input type="text" id="cName" placeholder="Ваше имя" autocomplete="given-name"/>
+          <div class="form-err" id="errName">Введите имя</div>
+        </div>
+        <div class="fg">
+          <label for="cPhone">Телефон *</label>
+          <input type="tel" id="cPhone" placeholder="+7 (___) ___-__-__" autocomplete="tel"
+            onfocus="if(!this.value)this.value='+7 '"
+            oninput="fmtPhone(event)"/>
+          <div class="form-err" id="errPhone">Введите номер телефона</div>
+        </div>
+      </div>
+      <div class="wnav">
+        <button class="btn btn-outline" onclick="goStep(4)">← Назад</button>
+        <button class="btn btn-primary" id="submitBtn" onclick="submitBk()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          Записаться
+        </button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+const $=id=>document.getElementById(id);
+const MN=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+const WD=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+const fd=s=>{const d=new Date(s);return`${d.getDate()} ${MN[d.getMonth()]} ${d.getFullYear()}`};
+const iso=(y,m,d)=>`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+
+/* ── Service → category mapping ── */
+const SVC_CAT={
+  'Маникюр классический':'mani','Маникюр гель-лак':'mani',
+  'Педикюр классический':'mani','Педикюр гель-лак':'mani','Наращивание ногтей':'mani',
+  'Наращивание ресниц':'lash','Ламинирование ресниц':'lash',
+  'Ламинирование бровей':'lash','Архитектура бровей':'lash',
+  'Стрижка женская':'hair','Окрашивание волос':'hair',
+  'Дневной макияж':'make','Вечерний макияж':'make','Шугаринг (ноги)':'make'
+};
+/* Keywords to match Supabase specialization field */
+const CAT_KW={
+  mani:['маникюр','педикюр','ногт'],
+  lash:['ресниц','бровей','брови','ламинирование'],
+  hair:['волос','стрижка','укладка','окрашивание'],
+  make:['макияж','шугаринг']
+};
+/* Static fallback masters with category */
+const STATIC_MASTERS=[
+  {id:1,name:'Айгерим',cat:'mani',specialization:'Маникюр, педикюр'},
+  {id:2,name:'Дина',   cat:'lash',specialization:'Ресницы, брови'},
+  {id:3,name:'Камила', cat:'hair',specialization:'Волосы, окрашивание'},
+  {id:4,name:'Сабина', cat:'make',specialization:'Макияж, шугаринг'}
+];
+const MASTER_COLORS=['#C8779A','#6A9E8A','#C9A87A','#B89AC4'];
+const CAT_LABELS={mani:'Маникюр / Педикюр',lash:'Ресницы / Брови',hair:'Волосы',make:'Макияж / Шугаринг',all:'Все услуги'};
+
+let bk={svcs:[],mid:null,mname:'',date:'',time:''};
+let calY,calM,blocked=[];
+function bkTotal(){return bk.svcs.reduce((s,x)=>s+x.price,0)}
+function bkNames(){return bk.svcs.map(x=>x.name).join(', ')}
+function bkCats(){return[...new Set(bk.svcs.map(x=>x.cat))]}
+function bkCat(){const c=bkCats();return c.length===1?c[0]:'all'}
+
+function goStep(n){
+  document.querySelectorAll('.wstep').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.ps').forEach((s,i)=>{
+    s.classList.toggle('active',i+1===n);
+    s.classList.toggle('done',i+1<n);
+  });
+  const el=$(`s${n}`);if(el)el.classList.add('active');
+  if(n===2)loadMasters();
+  if(n===3)initCal();
+  if(n===4)loadSlots();
+  if(n===5)renderSum();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ─── STEP 1 ─── */
+function pickSvc(name,price,cat,el){
+  const idx=bk.svcs.findIndex(x=>x.name===name);
+  if(idx>=0){bk.svcs.splice(idx,1);el.classList.remove('sel');}
+  else{bk.svcs.push({name,price,cat});el.classList.add('sel');}
+  bk.mid=null;bk.mname='';
+  const n=bk.svcs.length;
+  $('s1n').disabled=n===0;
+  const info=$('svcSelInfo');
+  if(n>0){
+    info.style.display='inline-block';
+    $('svcSelCount').textContent=n;
+    $('svcSelTotal').textContent=bkTotal().toLocaleString('ru')+' ₸';
+  }else{info.style.display='none';}
+}
+
+/* ─── STEP 2 ─── */
+function masterMatchesCat(m,cat){
+  if(cat==='all')return true;
+  const spec=(m.specialization||'').toLowerCase();
+  return(CAT_KW[cat]||[]).some(kw=>spec.includes(kw));
+}
+function renderMasterItems(masters){
+  const g=$('moGrid');
+  if(!masters.length){
+    g.innerHTML='<div class="empty-st">Нет доступных мастеров для этой услуги</div>';return;
+  }
+  g.innerHTML=masters.map((m,i)=>{
+    const sid=`'${String(m.id).replace(/'/g, "\\'")}'`;
+    const sname=(m.name||'').replace(/'/g,"\\'");
+    const catToAv={mani:'av-mani',hair:'av-hair',make:'av-make',lash:'av-lash',all:'av-mani'};
+    const avClass=m.cat?catToAv[m.cat]||'av-mani':catToAv[bk.cat]||'av-mani';
+    return`<div class="mo-item" onclick="pickM(${sid},'${sname}',this)">
+      <div class="mo-av av-img ${avClass}"></div>
+      <div class="mo-name">${m.name||''}</div>
+      <div class="mo-spec">${m.specialization||''}</div></div>`;
+  }).join('');
+}
+async function loadMasters(){
+  const g=$('moGrid');
+  const hint=$('s2').querySelector('.wstep-hint');
+  const cats=bkCats();
+  if(hint)hint.textContent=cats.length>1
+    ?'Мастера для выбранных услуг'
+    :`Мастера по: ${CAT_LABELS[bkCat()]||'выбранной услуге'}`;
+  g.innerHTML='<div class="empty-st"><div class="spin"></div></div>';
+  bk.mid=null;bk.mname='';$('s2n').disabled=true;
+  try{
+    const{data,error}=await sb.from('masters').select('*').eq('active',true).order('name');
+    if(error)throw error;
+    if(data&&data.length){
+      const filtered=data.filter(m=>cats.some(c=>masterMatchesCat(m,c)));
+      renderMasterItems(filtered.length?filtered:data);
+      return;
+    }
+  }catch(e){}
+  /* Static fallback — filter by all selected categories */
+  const filtered=STATIC_MASTERS.filter(m=>cats.some(c=>c==='all'||m.cat===c));
+  renderMasterItems(filtered.length?filtered:STATIC_MASTERS);
+}
+function pickM(id,name,el){
+  bk.mid=id; bk.mname=name;
+  document.querySelectorAll('.mo-item').forEach(o=>o.classList.remove('sel'));
+  el.classList.add('sel');
+  $('s2n').disabled=false;
+}
+
+/* ─── STEP 3 ─── */
+function initCal(){const n=new Date();calY=n.getFullYear();calM=n.getMonth();loadBlocked().then(renderCal)}
+async function loadBlocked(){try{const{data}=await sb.from('blocked_dates').select('date');blocked=data?.map(r=>r.date)||[]}catch{blocked=[]}}
+function changeMonth(d){calM+=d;if(calM<0){calM=11;calY--}if(calM>11){calM=0;calY++}renderCal()}
+function renderCal(){
+  $('calTitle').textContent=`${MN[calM]} ${calY}`;
+  const g=$('calGrid');
+  g.innerHTML=WD.map(d=>`<div class="cal-hdr">${d}</div>`).join('');
+  const today=new Date();today.setHours(0,0,0,0);
+  const off=(new Date(calY,calM,1).getDay()+6)%7;
+  const days=new Date(calY,calM+1,0).getDate();
+  for(let i=0;i<off;i++)g.innerHTML+='<div></div>';
+  for(let d=1;d<=days;d++){
+    const dt=new Date(calY,calM,d),s=iso(calY,calM,d);
+    const past=dt<today,blk=blocked.includes(s),sel=bk.date===s;
+    g.innerHTML+=`<button class="cal-day${sel?' sel':''}${blk?' blocked':''}" ${past||blk?'disabled':''} onclick="pickDate('${s}',this)">${d}</button>`;
+  }
+}
+function pickDate(s,el){
+  bk.date=s;
+  document.querySelectorAll('.cal-day').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel');
+  $('s3n').disabled=false;
+}
+
+/* ─── STEP 4 ─── */
+const SLOTS=['09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00'];
+async function loadSlots(){
+  const g=$('timeGrid');
+  $('timeHint').textContent=`Слоты на ${fd(bk.date)} — ${bk.mname}`;
+  g.innerHTML='<div class="empty-st"><div class="spin"></div></div>';
+  try{
+    const{data}=await sb.from('bookings').select('time').eq('master_id',bk.mid).eq('date',bk.date).neq('status','cancelled');
+    renderSlots((data||[]).map(r=>r.time.slice(0,5)));
+  }catch{renderSlots([])}
+}
+function renderSlots(taken){
+  $('timeGrid').innerHTML=SLOTS.map(t=>{
+    const dis=taken.includes(t),sel=bk.time===t;
+    return`<button class="time-btn${sel?' sel':''}${dis?' disabled':''}" ${dis?'disabled':''} onclick="pickTime('${t}',this)">${t}</button>`;
+  }).join('');
+}
+function pickTime(t,el){
+  bk.time=t;
+  document.querySelectorAll('.time-btn').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel');
+  $('s4n').disabled=false;
+}
+
+/* ─── STEP 5 ─── */
+function renderSum(){
+  const rows=bk.svcs.map(x=>`<div class="bsr"><span class="bsl">${x.name}</span><span class="bsv">${x.price.toLocaleString('ru')} ₸</span></div>`).join('');
+  $('bkSum').innerHTML=rows
+    +`<div class="bsr bsr-total"><span class="bsl" style="font-weight:700">Итого</span><span class="bsv" style="font-weight:700;color:var(--rose-dk)">${bkTotal().toLocaleString('ru')} ₸</span></div>`
+    +`<div class="bsr"><span class="bsl">Мастер</span><span class="bsv">${bk.mname}</span></div>`
+    +`<div class="bsr"><span class="bsl">Дата</span><span class="bsv">${fd(bk.date)}</span></div>`
+    +`<div class="bsr"><span class="bsl">Время</span><span class="bsv">${bk.time}</span></div>`;
+}
+function fmtPhone(e){
+  let d=e.target.value.replace(/\D/g,'');
+  if(!d){e.target.value='+7 ';return;}
+  if(d[0]!=='7')d='7'+d;
+  d=d.substring(0,11);
+  let r='+7';
+  if(d.length>1)r+=' ('+d.substring(1,Math.min(d.length,4));
+  if(d.length>=4)r+=') '+d.substring(4,Math.min(d.length,7));
+  if(d.length>=7)r+='-'+d.substring(7,Math.min(d.length,9));
+  if(d.length>=9)r+='-'+d.substring(9,11);
+  e.target.value=r;
+}
+async function submitBk(){
+  const name=$('cName').value.trim(),phone=$('cPhone').value.trim();
+  const phoneOk=phone.replace(/\D/g,'').length>=11;
+  $('errName').style.display=name?'none':'block';$('cName').classList.toggle('err',!name);
+  $('errPhone').style.display=phoneOk?'none':'block';$('cPhone').classList.toggle('err',!phoneOk);
+  if(!name||!phoneOk)return;
+  const btn=$('submitBtn');btn.disabled=true;
+  btn.innerHTML='<span class="spin"></span> Отправка…';
+  try{
+    const{error}=await sb.from('bookings').insert({
+      master_id:bk.mid,service:bkNames(),date:bk.date,
+      time:bk.time,client_name:name,phone:phone,status:'new'
+    });
+    if(error)throw error;
+    document.querySelectorAll('.wstep').forEach(s=>s.classList.remove('active'));
+    $('bkProg').style.display='none';
+    $('bkOk').classList.add('show');
+    $('okMsg').textContent=`${name}, ждём вас ${fd(bk.date)} в ${bk.time}. Мастер: ${bk.mname}`;
+  }catch(e){
+    /* Demo mode — show success even if Supabase unavailable */
+    document.querySelectorAll('.wstep').forEach(s=>s.classList.remove('active'));
+    $('bkProg').style.display='none';
+    $('bkOk').classList.add('show');
+    $('okMsg').textContent=`${name}, ждём вас ${fd(bk.date)} в ${bk.time}. Мастер: ${bk.mname}`;
+  }
+}
+function resetBk(){
+  bk={svcs:[],mid:null,mname:'',date:'',time:''};
+  $('bkOk').classList.remove('show');$('bkProg').style.display='flex';
+  $('s1n').disabled=true;$('cName').value='';$('cPhone').value='';
+  $('svcSelInfo').style.display='none';
+  document.querySelectorAll('.svc-opt,.mo-item').forEach(o=>o.classList.remove('sel'));
+  goStep(1);
+}
+</script>
+</body>
+</html>
