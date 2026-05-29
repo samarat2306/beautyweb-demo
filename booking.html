@@ -548,8 +548,8 @@ async function submitBk(){
   btn.innerHTML='<span class="spin"></span> Отправка…';
   try{
     const{error}=await sb.from('bookings').insert({
-      master_id:bk.mid,service:bkNames(),date:bk.date,
-      time:bk.time,client_name:name,phone:phone,status:'new'
+      name:name,phone:phone,service:bkNames(),
+      master_id:bk.mid,date:bk.date,time:bk.time,status:'new'
     });
     if(error)throw error;
     document.querySelectorAll('.wstep').forEach(s=>s.classList.remove('active'));

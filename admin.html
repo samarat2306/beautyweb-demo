@@ -708,7 +708,7 @@ async function loadBookings(){
   const tbody = document.getElementById('bookings-tbody');
   tbody.innerHTML = '<tr class="loading-row"><td colspan="6"><span class="spinner"></span>Загрузка…</td></tr>';
   try{
-    const {data,error} = await sb.from('bookings').select('*').order('created_at',{ascending:false});
+    const {data,error} = await sb.from('bookings').select('*, masters(name, specialization)').order('created_at',{ascending:false});
     if(error) throw error;
     allBookings = data||[];
     populateMasterFilter();
@@ -721,7 +721,7 @@ async function loadBookings(){
 function populateMasterFilter(){
   const sel = document.getElementById('filter-master');
   const prev = sel.value;
-  const masters = [...new Set(allBookings.map(b=>b.master_name).filter(Boolean))];
+  const masters = [...new Set(allBookings.map(b=>b.masters?.name).filter(Boolean))];
   sel.innerHTML = '<option value="">Все мастера</option>';
   masters.forEach(m=>{
     const o = document.createElement('option');
@@ -738,9 +738,9 @@ function applyFilters(){
   const date  = document.getElementById('filter-date').value;
 
   let rows = allBookings.filter(b=>{
-    if(q && !(b.client_name||'').toLowerCase().includes(q) && !(b.phone||'').includes(q)) return false;
+    if(q && !(b.name||'').toLowerCase().includes(q) && !(b.phone||'').includes(q)) return false;
     if(st && b.status !== st) return false;
-    if(master && b.master_name !== master) return false;
+    if(master && (b.masters?.name) !== master) return false;
     if(date && b.date !== date) return false;
     return true;
   });
@@ -758,11 +758,11 @@ function renderBookings(rows){
   tbody.innerHTML = rows.map(b=>`
     <tr>
       <td>
-        <div style="font-weight:600;color:var(--text)">${esc(b.client_name||'—')}</div>
+        <div style="font-weight:600;color:var(--text)">${esc(b.name||'—')}</div>
         <div style="font-size:12px;color:var(--text-dim)">${esc(b.phone||'')}</div>
       </td>
       <td>${esc(b.service||'—')}</td>
-      <td>${esc(b.master_name||'—')}</td>
+      <td>${esc(b.masters?.name||'—')}</td>
       <td>
         <div style="font-weight:500">${formatDate(b.date)}</div>
         <div style="font-size:12px;color:var(--text-dim)">${esc(b.time||'')}</div>
@@ -797,7 +797,7 @@ function confirmDelete(id){
   const b = allBookings.find(x=>x.id==id);
   openModal(
     'Удалить запись?',
-    `Удалить запись клиента ${b?.client_name||id}? Действие нельзя отменить.`,
+    `Удалить запись клиента ${b?.name||id}? Действие нельзя отменить.`,
     'Удалить', 'btn-danger',
     ()=>deleteBooking(id)
   );
@@ -886,7 +886,7 @@ async function saveMaster(){
   const svcs = document.getElementById('nm-services').value.trim();
   if(!name){showToast('Введите имя мастера','error');return;}
   try{
-    const obj={name,spec,services:svcs?svcs.split(',').map(s=>s.trim()):[],active:true};
+    const obj={name, specialization: spec, active:true};
     const {data,error}=await sb.from('masters').insert([obj]).select();
     if(error) throw error;
     mastersData.push(data[0]||{...obj,id:'m'+Date.now()});
@@ -990,7 +990,7 @@ async function blockSelected(){
   if(!calSelectedDate){showToast('Сначала выберите дату','error');return;}
   if(blockedDates.includes(calSelectedDate)){showToast('Дата уже заблокирована','info');return;}
   try{
-    const {error}=await sb.from('blocked_dates').insert([{date:calSelectedDate,reason:'Выходной'}]);
+    const {error}=await sb.from('blocked_dates').insert([{date:calSelectedDate}]);
     if(error) throw error;
     showToast('Дата заблокирована','success');
     await loadBlockedDates();
@@ -1036,7 +1036,7 @@ async function unblockDate(date){
 ═══════════════════════════════════════════════ */
 async function loadAnalytics(){
   try{
-    const {data,error}=await sb.from('bookings').select('*');
+    const {data,error}=await sb.from('bookings').select('*, masters(name)');
     if(error) throw error;
     const rows=data||[];
 
@@ -1072,7 +1072,7 @@ async function loadAnalytics(){
 
     // Masters chart
     const mstMap={};
-    rows.forEach(b=>{ if(b.master_name){mstMap[b.master_name]=(mstMap[b.master_name]||0)+1;} });
+    rows.forEach(b=>{ const mn=b.masters?.name; if(mn){mstMap[mn]=(mstMap[mn]||0)+1;} });
     const mstArr=Object.entries(mstMap).sort((a,b)=>b[1]-a[1]);
     const maxMst=mstArr[0]?.[1]||1;
     document.getElementById('masters-chart').innerHTML= mstArr.length?
@@ -1110,7 +1110,7 @@ async function loadAnalytics(){
       recent.map(b=>`
         <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--card2);border-radius:8px;border:1px solid var(--border)">
           <div>
-            <div style="font-size:14px;font-weight:600;color:var(--text)">${esc(b.client_name||'—')}</div>
+            <div style="font-size:14px;font-weight:600;color:var(--text)">${esc(b.name||'—')}</div>
             <div style="font-size:12px;color:var(--text-dim)">${esc(b.service||'—')} · ${formatDate(b.date)}</div>
           </div>
           ${statusBadge(b.status)}
