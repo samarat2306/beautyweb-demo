@@ -332,6 +332,57 @@ tr:hover td{background:rgba(255,255,255,.02)}
 .toast.hide{animation:toastOut .3s ease forwards}
 @keyframes toastOut{to{opacity:0;transform:translateX(30px)}}
 
+/* ─── SCHEDULE TAB ──────────────────────────── */
+.sched-controls{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.sched-pills{display:flex;gap:8px;flex-wrap:wrap;flex:1}
+.sched-pill{padding:7px 16px;border:1px solid var(--border);border-radius:20px;
+  background:transparent;color:var(--text-muted);font-size:13px;font-weight:500;
+  cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
+.sched-pill.active{background:var(--rose);color:#fff;border-color:var(--rose)}
+.sched-pill:hover:not(.active){border-color:var(--rose);color:var(--rose)}
+.sched-week-nav{display:flex;align-items:center;gap:8px}
+.sched-week-label{font-size:13px;font-weight:600;color:var(--text);min-width:160px;text-align:center}
+.sched-nav-btn{width:30px;height:30px;border-radius:8px;border:1px solid var(--border);
+  background:transparent;color:var(--text-muted);cursor:pointer;font-size:18px;
+  display:flex;align-items:center;justify-content:center;transition:all .2s;font-family:'Inter',sans-serif}
+.sched-nav-btn:hover{border-color:var(--rose);color:var(--rose)}
+.sched-table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border)}
+.sched-table{width:100%;border-collapse:collapse;min-width:640px}
+.sched-table th{padding:8px 6px;background:var(--card2);color:var(--text-muted);font-size:11px;
+  font-weight:600;text-align:center;border-bottom:1px solid var(--border);
+  border-right:1px solid rgba(201,168,122,.08)}
+.sched-table td{padding:3px;border-bottom:1px solid rgba(201,168,122,.06);
+  border-right:1px solid rgba(201,168,122,.06);vertical-align:top;min-width:80px}
+.sched-time-col{width:56px!important;min-width:56px!important;font-size:11px;color:var(--text-dim);
+  text-align:center;padding:6px 4px!important;background:var(--card2)}
+.sched-col-blocked{background:rgba(232,122,122,.07)!important}
+.sched-col-today{background:rgba(200,119,154,.06)!important}
+.sched-date-num{font-size:15px;font-weight:700;display:block;color:var(--text)}
+.sched-blocked-badge{font-size:10px;color:var(--danger);font-weight:600;margin-top:2px}
+.sched-cell-blocked{background:rgba(232,122,122,.05)}
+.sched-cell-booked{background:rgba(200,119,154,.06)}
+.sched-card{background:rgba(200,119,154,.18);border:1px solid rgba(200,119,154,.3);
+  border-radius:5px;padding:4px 6px;cursor:default}
+.sched-card-name{font-size:11px;font-weight:600;color:var(--text)}
+.sched-card-svc{font-size:10px;color:var(--text-muted);margin-top:1px;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;max-width:80px}
+/* Block reason input */
+.block-reason-input{
+  width:100%;padding:9px 12px;background:var(--card2);border:1px solid var(--border);
+  border-radius:8px;color:var(--text);font-size:13px;font-family:'Inter',sans-serif;
+  outline:none;transition:border-color .2s;
+}
+.block-reason-input:focus{border-color:var(--rose)}
+.block-reason-input::placeholder{color:var(--text-dim)}
+/* Spec checkboxes */
+.spec-checks{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:4px 0}
+.spec-check-label{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-muted);
+  padding:8px 12px;background:var(--card2);border-radius:8px;border:1px solid var(--border);
+  cursor:pointer;transition:border-color .2s,color .2s}
+.spec-check-label:hover{border-color:var(--rose);color:var(--text)}
+.spec-check-label input{accent-color:var(--rose);width:15px;height:15px;cursor:pointer;flex-shrink:0}
+@media(max-width:480px){.spec-checks{grid-template-columns:1fr}}
+
 /* ─── RESPONSIVE ─────────────────────────────── */
 @media(max-width:768px){
   .topbar{padding:0 16px}
@@ -345,6 +396,103 @@ tr:hover td{background:rgba(255,255,255,.02)}
 @media(max-width:480px){
   .login-box{padding:32px 24px}
   .stats-grid{grid-template-columns:1fr}
+}
+
+/* ═══ ROUND 8 DESIGN UPGRADE ═══ */
+
+/* Emil easing */
+:root{
+  --ease-out:cubic-bezier(0.23,1,0.32,1);
+  --ease-in-out:cubic-bezier(0.77,0,0.175,1);
+  --ease-spring:cubic-bezier(0.32,0.72,0,1);
+}
+
+/* Topbar — gradient accent line at bottom */
+.topbar{position:relative}
+.topbar::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--rose) 25%,var(--lilac) 55%,var(--teal) 80%,transparent);
+  opacity:.55;pointer-events:none;
+}
+
+/* Login — better shadows + focus ring + press */
+.login-box{
+  box-shadow:0 24px 64px rgba(0,0,0,.55),0 0 0 1px rgba(200,119,154,.08)!important;
+  border-color:rgba(201,168,122,.22)!important;
+}
+.login-input-wrap input:focus{
+  border-color:var(--rose)!important;
+  box-shadow:0 0 0 3px rgba(200,119,154,.15)!important;
+}
+.login-btn{transition:opacity .2s var(--ease-out),transform .15s var(--ease-out)!important}
+.login-btn:active{transform:scale(0.97)!important}
+
+/* Tabs — subtle gradient on active + tracking */
+.tab-btn{letter-spacing:.01em;transition:color 160ms var(--ease-out),border-color 160ms var(--ease-out)!important}
+.tab-btn.active{
+  background:linear-gradient(180deg,rgba(200,119,154,.07) 0%,transparent 100%);
+  border-radius:4px 4px 0 0;
+}
+
+/* Button press — Emil */
+.btn{transition:opacity 160ms var(--ease-out),transform 160ms var(--ease-out),box-shadow 160ms var(--ease-out)!important}
+.btn:active{transform:scale(0.97)!important;opacity:1!important}
+.logout-btn:active{transform:scale(0.97)!important}
+
+/* Table — rose left indicator on hover */
+td{transition:background 120ms}
+tr:hover td:first-child{box-shadow:inset 3px 0 0 var(--rose)}
+
+/* Status badges — border-based, no dot */
+.badge::before{display:none!important}
+.badge-new{background:rgba(201,168,122,.18);color:var(--gold);border:1px solid rgba(201,168,122,.32)!important}
+.badge-confirmed{background:rgba(106,158,138,.18);color:var(--success);border:1px solid rgba(106,158,138,.32)!important}
+.badge-cancelled{background:rgba(232,122,122,.15);color:var(--danger);border:1px solid rgba(232,122,122,.28)!important}
+.badge-done{background:rgba(184,142,232,.18);color:#C09EF8;border:1px solid rgba(184,142,232,.32)!important}
+
+/* Master avatar — squircle */
+.master-avatar{border-radius:14px!important;box-shadow:0 4px 16px rgba(200,119,154,.3)}
+
+/* Master card — lift hover with guard */
+.master-card{transition:border-color 180ms var(--ease-out),box-shadow 180ms var(--ease-out),transform 180ms var(--ease-out)!important}
+@media(hover:hover) and (pointer:fine){
+  .master-card:hover{transform:translateY(-2px)!important;border-color:rgba(200,119,154,.4)!important;box-shadow:0 8px 32px rgba(200,119,154,.18)!important}
+}
+
+/* Stat cards — colored left border accent */
+.stat-card{border-left:3px solid transparent!important;transition:transform 160ms var(--ease-out)}
+.stat-card.rose{border-left-color:var(--rose)!important}
+.stat-card.teal{border-left-color:var(--teal)!important}
+.stat-card.gold{border-left-color:var(--gold)!important}
+.stat-card.purple{border-left-color:#B88EE8!important}
+.stat-value{font-size:38px!important;letter-spacing:-0.02em!important}
+
+/* Schedule table — proper cell height + hover empty cells */
+.sched-table tbody td{height:48px;transition:background 100ms}
+.sched-cell-empty:hover{background:rgba(200,119,154,.05)!important;cursor:pointer}
+.sched-table th{text-transform:uppercase;letter-spacing:.06em;font-size:10px}
+
+/* Form focus — ring */
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{
+  border-color:var(--rose)!important;
+  box-shadow:0 0 0 3px rgba(200,119,154,.12)!important;
+}
+
+/* Blocked-list items — hover tint */
+.blocked-item{transition:background 120ms;border-radius:10px!important}
+.blocked-item:hover{background:rgba(232,122,122,.08)!important}
+
+/* Spec-check — checked state highlight */
+.spec-check-label:has(input:checked){
+  border-color:var(--rose)!important;
+  color:var(--text)!important;
+  background:rgba(200,119,154,.1)!important;
+}
+
+/* Reduce motion */
+@media(prefers-reduced-motion:reduce){
+  .topbar::after{display:none}
+  *{transition-duration:.01ms!important;animation-duration:.01ms!important}
 }
 </style>
 </head>
@@ -395,6 +543,9 @@ tr:hover td{background:rgba(255,255,255,.02)}
     </button>
     <button class="tab-btn" data-tab="masters" onclick="switchTab('masters',this)">
       <span class="tab-icon">💆</span> Мастера
+    </button>
+    <button class="tab-btn" data-tab="schedule" onclick="switchTab('schedule',this)">
+      <span class="tab-icon">📆</span> Расписание
     </button>
     <button class="tab-btn" data-tab="calendar" onclick="switchTab('calendar',this)">
       <span class="tab-icon">📅</span> Календарь
@@ -462,13 +613,14 @@ tr:hover td{background:rgba(255,255,255,.02)}
             <label>Имя *</label>
             <input id="nm-name" type="text" placeholder="Имя мастера"/>
           </div>
-          <div class="form-group">
-            <label>Специализация</label>
-            <input id="nm-spec" type="text" placeholder="Напр. Маникюр / Педикюр"/>
-          </div>
           <div class="form-group form-full">
-            <label>Услуги (через запятую)</label>
-            <input id="nm-services" type="text" placeholder="Маникюр, Педикюр, Гель-лак"/>
+            <label>Специализация (выберите категории) *</label>
+            <div class="spec-checks">
+              <label class="spec-check-label"><input type="checkbox" name="nm-spec-check" value="Маникюр, педикюр"/> Маникюр / Педикюр</label>
+              <label class="spec-check-label"><input type="checkbox" name="nm-spec-check" value="Ресницы, брови"/> Ресницы / Брови</label>
+              <label class="spec-check-label"><input type="checkbox" name="nm-spec-check" value="Волосы, окрашивание"/> Волосы / Окрашивание</label>
+              <label class="spec-check-label"><input type="checkbox" name="nm-spec-check" value="Макияж, шугаринг"/> Макияж / Шугаринг</label>
+            </div>
           </div>
         </div>
         <div class="form-actions" style="margin-top:16px">
@@ -481,6 +633,27 @@ tr:hover td{background:rgba(255,255,255,.02)}
         <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-dim)">
           <span class="spinner"></span> Загрузка мастеров…
         </div>
+      </div>
+    </section>
+
+    <!-- ─── TAB: РАСПИСАНИЕ ─────────────────── -->
+    <section class="tab-panel" id="tab-schedule">
+      <div class="section-header">
+        <div class="section-title">Расписание <span>мастеров</span></div>
+        <button class="btn btn-outline btn-sm" onclick="loadSchedule()">⟳ Обновить</button>
+      </div>
+      <div class="sched-controls">
+        <div class="sched-pills" id="sched-pills">
+          <span style="color:var(--text-dim);font-size:13px">Войдите для просмотра мастеров</span>
+        </div>
+        <div class="sched-week-nav">
+          <button class="sched-nav-btn" onclick="schedNav(-1)" title="Предыдущая неделя">‹</button>
+          <span class="sched-week-label" id="sched-week-label">—</span>
+          <button class="sched-nav-btn" onclick="schedNav(1)" title="Следующая неделя">›</button>
+        </div>
+      </div>
+      <div id="sched-grid">
+        <div style="text-align:center;padding:40px;color:var(--text-dim)">Выберите мастера выше</div>
       </div>
     </section>
 
@@ -508,6 +681,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
 
           <div class="cal-actions" style="margin-top:20px">
             <div class="cal-selected-date" id="cal-selected-display">Дата не выбрана</div>
+            <input class="block-reason-input" id="block-reason" placeholder="Причина (необязательно): выходной, праздник…"/>
             <div class="cal-actions-row">
               <button class="btn btn-danger btn-sm" style="flex:1" onclick="blockSelected()">🔒 Заблокировать</button>
               <button class="btn btn-success btn-sm" style="flex:1" onclick="unblockSelected()">🔓 Разблокировать</button>
@@ -659,9 +833,10 @@ function switchTab(id, btn){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('tab-'+id).classList.add('active');
   btn.classList.add('active');
-  if(id==='bookings') loadBookings();
-  if(id==='masters')  loadMasters();
-  if(id==='calendar') initCalendar();
+  if(id==='bookings')  loadBookings();
+  if(id==='masters')   loadMasters();
+  if(id==='schedule')  initSchedule();
+  if(id==='calendar')  initCalendar();
   if(id==='analytics') loadAnalytics();
 }
 
@@ -882,17 +1057,19 @@ function toggleAddMasterForm(){
 
 async function saveMaster(){
   const name = document.getElementById('nm-name').value.trim();
-  const spec = document.getElementById('nm-spec').value.trim();
-  const svcs = document.getElementById('nm-services').value.trim();
+  const checked = [...document.querySelectorAll('input[name="nm-spec-check"]:checked')].map(c=>c.value);
   if(!name){showToast('Введите имя мастера','error');return;}
+  if(!checked.length){showToast('Выберите хотя бы одну категорию','error');return;}
+  const specialization = checked.join(' | ');
   try{
-    const obj={name, specialization: spec, active:true};
+    const obj={name, specialization, active:true};
     const {data,error}=await sb.from('masters').insert([obj]).select();
     if(error) throw error;
     mastersData.push(data[0]||{...obj,id:'m'+Date.now()});
     renderMasters();
     toggleAddMasterForm();
-    ['nm-name','nm-spec','nm-services'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('nm-name').value='';
+    document.querySelectorAll('input[name="nm-spec-check"]').forEach(cb=>cb.checked=false);
     showToast('Мастер добавлен','success');
   }catch(e){showToast('Ошибка: '+e.message,'error')}
 }
@@ -989,9 +1166,12 @@ function calNav(dir){calMonth+=dir;if(calMonth>11){calMonth=0;calYear++;}if(calM
 async function blockSelected(){
   if(!calSelectedDate){showToast('Сначала выберите дату','error');return;}
   if(blockedDates.includes(calSelectedDate)){showToast('Дата уже заблокирована','info');return;}
+  // alter table blocked_dates add column if not exists reason text default 'Выходной день';
+  const reason = (document.getElementById('block-reason')?.value.trim()) || 'Выходной день';
   try{
-    const {error}=await sb.from('blocked_dates').insert([{date:calSelectedDate}]);
+    const {error}=await sb.from('blocked_dates').insert([{date:calSelectedDate, reason}]);
     if(error) throw error;
+    if(document.getElementById('block-reason')) document.getElementById('block-reason').value='';
     showToast('Дата заблокирована','success');
     await loadBlockedDates();
   }catch(e){showToast('Ошибка: '+e.message,'error')}
@@ -1029,6 +1209,131 @@ async function unblockDate(date){
     showToast('Дата разблокирована','success');
     await loadBlockedDates();
   }catch(e){showToast('Ошибка: '+e.message,'error')}
+}
+
+/* ═══════════════════════════════════════════════
+   SCHEDULE TAB
+═══════════════════════════════════════════════ */
+let schedMasterId = null, schedWeekOff = 0;
+const SCHED_SLOTS = ['09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00'];
+const SCHED_DAYS  = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+
+function getWeekDays(off=0){
+  const now = new Date();
+  const dow = now.getDay();
+  const mon = new Date(now);
+  mon.setDate(now.getDate() - (dow===0?6:dow-1) + off*7);
+  mon.setHours(0,0,0,0);
+  return Array.from({length:7},(_,i)=>{
+    const d=new Date(mon);d.setDate(mon.getDate()+i);
+    return d.toISOString().slice(0,10);
+  });
+}
+
+async function initSchedule(){
+  const pills = document.getElementById('sched-pills');
+  pills.innerHTML = '<span class="spinner"></span>';
+  let masters = [];
+  try{
+    const {data,error}=await sb.from('masters').select('id,name').eq('active',true).order('name');
+    if(error)throw error;
+    masters = data&&data.length ? data : mastersData;
+  }catch{ masters = mastersData; }
+
+  if(!masters.length){
+    pills.innerHTML='<span style="color:var(--text-dim);font-size:13px">Нет мастеров</span>';
+    return;
+  }
+  pills.innerHTML = masters.map(m=>`
+    <button class="sched-pill" data-id="${m.id}" onclick="selectSchedMaster('${m.id}',this)">
+      ${esc(m.name||'?')}
+    </button>`).join('');
+
+  const firstBtn = pills.querySelector('.sched-pill');
+  if(firstBtn){
+    schedMasterId = String(masters[0].id);
+    schedWeekOff = 0;
+    firstBtn.classList.add('active');
+    loadSchedule();
+  }
+}
+
+function selectSchedMaster(id, btn){
+  schedMasterId = String(id);
+  schedWeekOff = 0;
+  document.querySelectorAll('.sched-pill').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  loadSchedule();
+}
+
+function schedNav(dir){
+  schedWeekOff += dir;
+  loadSchedule();
+}
+
+async function loadSchedule(){
+  const grid = document.getElementById('sched-grid');
+  if(!schedMasterId){
+    grid.innerHTML='<div style="color:var(--text-dim);padding:20px;text-align:center">Выберите мастера</div>';
+    return;
+  }
+  const days = getWeekDays(schedWeekOff);
+  const wStart = days[0], wEnd = days[6];
+
+  const wLabel = document.getElementById('sched-week-label');
+  const fmtD = d=>{const[,m,dd]=d.split('-');const mn=['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];return`${parseInt(dd)} ${mn[parseInt(m)-1]}`;};
+  wLabel.textContent=`${fmtD(wStart)} — ${fmtD(wEnd)} ${wEnd.slice(0,4)}`;
+
+  grid.innerHTML='<div style="text-align:center;padding:30px;color:var(--text-dim)"><span class="spinner"></span> Загрузка…</div>';
+
+  let bookings=[], blockedDays=[];
+  try{
+    const [bRes,blRes]=await Promise.all([
+      sb.from('bookings').select('name,phone,service,time,date,status').eq('master_id',schedMasterId).gte('date',wStart).lte('date',wEnd).neq('status','cancelled'),
+      sb.from('blocked_dates').select('date').gte('date',wStart).lte('date',wEnd)
+    ]);
+    bookings  = bRes.data  || [];
+    blockedDays = (blRes.data||[]).map(r=>r.date);
+  }catch(e){ console.error('schedule load:',e); }
+
+  const bmap={};
+  bookings.forEach(b=>{const k=`${b.date}|${(b.time||'').slice(0,5)}`;(bmap[k]=bmap[k]||[]).push(b);});
+
+  const today=new Date().toISOString().slice(0,10);
+
+  let html='<div class="sched-table-wrap"><table class="sched-table"><thead><tr><th class="sched-time-col">Время</th>';
+  days.forEach((d,i)=>{
+    const isBlocked=blockedDays.includes(d);
+    const isToday=d===today;
+    const num=parseInt(d.slice(8));
+    html+=`<th class="${isBlocked?'sched-col-blocked':''} ${isToday?'sched-col-today':''}">
+      ${SCHED_DAYS[i]}<span class="sched-date-num">${num}</span>
+      ${isBlocked?'<div class="sched-blocked-badge">Выходной</div>':''}
+    </th>`;
+  });
+  html+='</tr></thead><tbody>';
+
+  SCHED_SLOTS.forEach(slot=>{
+    html+=`<tr><td class="sched-time-col">${slot}</td>`;
+    days.forEach(d=>{
+      const isBlocked=blockedDays.includes(d);
+      const bks=bmap[`${d}|${slot}`]||[];
+      if(isBlocked){
+        html+='<td class="sched-cell-blocked"></td>';
+      }else if(bks.length){
+        const b=bks[0];
+        html+=`<td class="sched-cell-booked"><div class="sched-card">
+          <div class="sched-card-name">${esc(b.name||'—')}</div>
+          <div class="sched-card-svc">${esc(b.service||'')}</div>
+        </div></td>`;
+      }else{
+        html+='<td class="sched-cell-empty"></td>';
+      }
+    });
+    html+='</tr>';
+  });
+  html+='</tbody></table></div>';
+  grid.innerHTML=html;
 }
 
 /* ═══════════════════════════════════════════════

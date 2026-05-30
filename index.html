@@ -11,13 +11,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet"/>
 <style>
 :root{
-  --rose:#D4609A;--rose-dk:#B03878;--rose-deep:#8A1A58;
-  --rose-lt:#F5E0EE;--rose-xl:#FBF0F6;
-  --lilac:#C07ED0;--lilac-dk:#9850BA;--lilac-lt:#EAD8F8;
-  --teal:#40A880;--teal-dk:#2E7A60;--teal-lt:#C8E8DC;
-  --gold:#D4980A;--gold-dk:#A87800;--gold-lt:#F0DFA0;
-  --bg:#FDFAF8;--surface:#FFFFFF;
-  --text:#2D1828;--text-2:#503848;--muted:#8A6A7A;
+  /* OKLCH perceptual palette — Soft Warm direction (open-design) */
+  --rose:oklch(62% 0.19 355);--rose-dk:oklch(48% 0.22 5);--rose-deep:oklch(38% 0.20 5);
+  --rose-lt:oklch(96% 0.05 355);--rose-xl:oklch(98% 0.02 355);
+  --lilac:oklch(67% 0.14 300);--lilac-dk:oklch(54% 0.16 300);--lilac-lt:oklch(95% 0.04 300);
+  --teal:oklch(67% 0.12 175);--teal-dk:oklch(54% 0.13 175);--teal-lt:oklch(95% 0.04 175);
+  --gold:oklch(71% 0.14 75);--gold-dk:oklch(58% 0.14 75);--gold-lt:oklch(95% 0.05 75);
+  --bg:oklch(99% 0.01 60);--surface:#FFFFFF;
+  --text:oklch(22% 0.02 5);--text-2:oklch(38% 0.03 10);--muted:oklch(56% 0.03 15);
   --border:rgba(200,119,154,.18);
   --serif:'Cormorant Garamond',Georgia,serif;
   --script:'Dancing Script',cursive;
@@ -26,7 +27,11 @@
   --sh-md:0 6px 28px rgba(160,82,122,.14);
   --sh-lg:0 16px 56px rgba(160,82,122,.18);
   --r:16px;--r-lg:24px;--r-xl:32px;
-  --trans:all .25s cubic-bezier(.4,0,.2,1);
+  /* Emil Kowalski custom easing curves */
+  --ease-out:cubic-bezier(0.23,1,0.32,1);
+  --ease-in-out:cubic-bezier(0.77,0,0.175,1);
+  --ease-spring:cubic-bezier(0.32,0.72,0,1);
+  --trans:all .22s var(--ease-out);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
@@ -232,6 +237,139 @@ footer{background:linear-gradient(135deg,#2D1828,#1A1020);color:rgba(255,255,255
   .hero-actions .btn{justify-content:center;width:100%}
   .bk-cta-inner{padding:2.5rem 1.5rem}
 }
+
+/* ═══════════════════════════════════════════════════════
+   DESIGN UPGRADE — Emil Kowalski · Impeccable · Open-Design
+   Soft Warm direction · Anti-pattern removal · Micro-motion
+═══════════════════════════════════════════════════════ */
+
+/* 1. Remove shimmer gradient text — Impeccable anti-pattern */
+.shimmer-grad{
+  background:none!important;-webkit-background-clip:unset!important;background-clip:unset!important;
+  -webkit-text-fill-color:var(--rose-dk)!important;color:var(--rose-dk)!important;animation:none!important;
+}
+.logo-name{
+  background:none!important;-webkit-background-clip:unset!important;background-clip:unset!important;
+  -webkit-text-fill-color:var(--rose-dk)!important;color:var(--rose-dk)!important;animation:none!important;
+}
+.hero-logo-brand-name{
+  background:none!important;-webkit-background-clip:unset!important;background-clip:unset!important;
+  -webkit-text-fill-color:var(--rose-dk)!important;color:var(--rose-dk)!important;animation:none!important;
+  font-size:1.6rem;font-weight:700;line-height:1.1;
+}
+.footer-logo-name{
+  background:none!important;-webkit-background-clip:unset!important;background-clip:unset!important;
+  -webkit-text-fill-color:var(--gold)!important;color:var(--gold)!important;animation:none!important;
+}
+/* h1 em, h2 em, bk-cta h2 em — solid italic color (no gradient clip) */
+.hero h1 em,.bk-cta-inner h2 em,h2 em{
+  font-style:italic;background:none!important;
+  -webkit-background-clip:unset!important;background-clip:unset!important;
+  -webkit-text-fill-color:var(--rose-dk)!important;color:var(--rose-dk)!important;
+  animation:none!important;
+}
+
+/* 2. Static gradients — remove shimmer-flow animation (Impeccable) */
+.btn-primary{
+  background:linear-gradient(135deg,var(--rose),var(--rose-dk))!important;
+  background-size:100%!important;animation:none!important;
+  box-shadow:0 4px 20px oklch(48% 0.22 5 / 0.38)!important;
+}
+.divider{
+  background:linear-gradient(90deg,var(--rose),var(--lilac),var(--teal),var(--gold))!important;
+  animation:none!important;
+}
+.nav-cta{
+  background:linear-gradient(135deg,var(--rose),var(--rose-dk))!important;animation:none!important;
+}
+
+/* 3. Remove glassmorphism — Impeccable anti-pattern */
+.hero-card{
+  background:#fff!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+  border:1px solid rgba(212,96,154,.12)!important;
+  box-shadow:0 8px 40px rgba(160,82,122,.12),0 2px 12px rgba(160,82,122,.06)!important;
+}
+.bk-cta-inner{
+  background:#fff!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+  border:1px solid rgba(212,96,154,.1)!important;
+}
+.master-card{
+  background:#fff!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+  border:1px solid rgba(212,96,154,.1)!important;
+  box-shadow:0 2px 16px rgba(160,82,122,.07)!important;
+}
+
+/* 4. Emil Kowalski — button press feedback (scale 0.97 on active) */
+.btn{transition:box-shadow 160ms var(--ease-out),transform 160ms var(--ease-out)!important}
+.btn:active{transform:scale(0.97)!important;transition-duration:80ms!important}
+.nav-cta{transition:box-shadow .2s var(--ease-out),transform .16s var(--ease-out),background .2s!important}
+.nav-cta:active{transform:scale(0.96)!important}
+.tab-btn:active{transform:scale(0.97)!important}
+
+/* 5. Hover guards (Emil — never animate without device capability check) */
+@media(hover:hover) and (pointer:fine){
+  .btn-primary:hover{
+    box-shadow:0 10px 36px oklch(48% 0.22 5 / 0.46)!important;transform:translateY(-2px)!important;
+  }
+  .btn-teal:hover{
+    box-shadow:0 10px 32px oklch(54% 0.13 175 / 0.4)!important;transform:translateY(-2px)!important;
+  }
+  .btn-ghost:hover{background:#fff!important;transform:none!important}
+  .nav-cta:hover{
+    box-shadow:0 6px 24px oklch(48% 0.22 5 / 0.4)!important;transform:translateY(-1px)!important;
+  }
+  .svc-card:hover{
+    background:#fff!important;border-color:var(--rose)!important;
+    box-shadow:0 4px 18px rgba(160,82,122,.1)!important;transform:translateY(-1px)!important;
+  }
+  .master-card:hover{
+    box-shadow:0 10px 36px rgba(160,82,122,.16)!important;transform:translateY(-4px)!important;
+    border-color:rgba(212,96,154,.25)!important;
+  }
+  .tab-btn.active.tab-btn:hover{opacity:1}
+}
+
+/* 6. Stagger for master cards — Emil Kowalski (60ms between items) */
+.masters-grid .master-card{
+  transition:opacity 0.5s var(--ease-out),transform 0.5s var(--ease-out),
+    box-shadow .2s var(--ease-out),border-color .18s var(--ease-out)!important;
+}
+.masters-grid .d1{transition-delay:0ms}
+.masters-grid .d2{transition-delay:60ms}
+.masters-grid .d3{transition-delay:120ms}
+.masters-grid .d4{transition-delay:180ms}
+
+/* 7. Better reveal easing (Emil) */
+.reveal{
+  opacity:0;transform:translateY(20px);
+  transition:opacity .5s var(--ease-out),transform .5s var(--ease-out)!important;
+}
+.reveal.in{opacity:1;transform:none}
+
+/* 8. Quieter mesh-bg blobs (Soft Warm — lower intensity) */
+.mb1{background:rgba(212,96,154,.16)!important}
+.mb2{background:rgba(192,126,208,.12)!important}
+.mb3{background:rgba(64,168,128,.09)!important}
+.mb4{background:rgba(212,152,10,.08)!important}
+
+/* 9. Service card cleaner base */
+.svc-card{background:#fff;border:1px solid rgba(200,119,154,.1)}
+
+/* 10. Hero service rows — cleaner */
+.hero-svc-row{
+  background:#fff!important;border:1px solid rgba(212,96,154,.08)!important;
+  transition:background .15s,border-color .15s;
+}
+@media(hover:hover) and (pointer:fine){
+  .hero-svc-row:hover{background:var(--rose-xl)!important;border-color:rgba(212,96,154,.2)!important}
+}
+
+/* 11. Better .section-head p line-height */
+.section-head p{line-height:1.7}
+p{line-height:1.75}
+
+/* 12. Master spec icon subtler */
+.master-spec::before{content:'·';color:var(--muted)}
 </style>
 </head>
 <body>
